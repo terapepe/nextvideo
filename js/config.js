@@ -13,7 +13,7 @@ window.NEXTVIDEO_CONFIG = {
     singleNetwork: "base",
     multiOrder: ["solana", "robinhood", "base", "bsc"],
 
-    evmAddress: "0x05675a5e05eb1748584fa38c70f74f9a2235d001",
+    evmAddress: "",
     solanaAddress: "",
 
     chains: {
