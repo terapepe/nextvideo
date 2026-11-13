@@ -1,6 +1,6 @@
 {
-  "cleanUrls": true,
   "rewrites": [
-    { "source": "/((?!css/|js/|assets/|LICENSE|manifest\\.webmanifest|favicon).*)", "destination": "/index.html" }
+    { "source": "/(models|providers|pricing|api-keys|studio|token)", "destination": "/index.html" },
+    { "source": "/(models|providers|pricing|api-keys|studio|token)/", "destination": "/index.html" }
   ]
 }
