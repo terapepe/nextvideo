@@ -1,7 +1,3 @@
-/*
- * NextVideo site configuration — edit this file only; no build step needed.
- * Every brand, token, network, contract-address and social setting lives here.
- */
 window.NEXTVIDEO_CONFIG = {
   brand: {
     name: "NextVideo",
@@ -13,20 +9,13 @@ window.NEXTVIDEO_CONFIG = {
   token: {
     name: "NextVideo",
     symbol: "NEXT",
-
-    // "single" = show only singleNetwork, themed for that network
-    // "multi"  = always show all 4 networks (Solana, Robinhood, Base, BSC)
-    mode: "multi",
-    singleNetwork: "robinhood", // solana | robinhood | base | bsc
-
-    // Order of networks in multi mode
+    mode: "single",
+    singleNetwork: "robinhood",
     multiOrder: ["solana", "robinhood", "base", "bsc"],
 
-    // Contract addresses. In multi mode Robinhood, Base and BSC always share evmAddress.
     evmAddress: "",
     solanaAddress: "",
 
-    // Per-network overrides (used in single mode). Empty values fall back to the defaults.
     chains: {
       solana:    { ca: "", tagline: "Near-zero fees, instant settlement" },
       robinhood: { ca: "", tagline: "Fast, low-fee L2 built for trading" },
@@ -40,16 +29,13 @@ window.NEXTVIDEO_CONFIG = {
     telegram: "NextVideo"  // handle or group   → https://t.me/NextVideo
   },
 
-  // Generation backend — leave empty until the API is ready. While empty, the UI never submits jobs.
   api: {
     baseUrl: ""
   },
 
-  // Video price in $NEXT per second, by resolution. Leave empty to hide price estimates.
   pricing: {},
 
   defaultModel: "dreamina-seedance-2-0-mini-260615",
-  // Providers shown on the Providers page and as Models filters.
   providers: {
     "alibaba": {
       "name": "Alibaba",
@@ -78,7 +64,6 @@ window.NEXTVIDEO_CONFIG = {
     }
   },
 
-  // provider = key in providers; types = Models page type filters.
   models: [
     {
       "id": "wan3.0-video",
