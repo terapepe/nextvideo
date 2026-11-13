@@ -10,7 +10,7 @@ window.NEXTVIDEO_CONFIG = {
     name: "Next",
     symbol: "NEXT",
     mode: "single",
-    singleNetwork: "base",
+    singleNetwork: "robinhood",
     multiOrder: ["solana", "robinhood", "base", "bsc"],
 
     evmAddress: "",
