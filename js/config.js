@@ -25,7 +25,7 @@ window.NEXTVIDEO_CONFIG = {
   },
 
   socials: {
-    x: "",        // handle without @  → https://x.com/
+    x: "@NEXTvideo_",        // handle without @  → https://x.com/
     telegram: ""  // handle or group   → https://t.me/
   },
 
