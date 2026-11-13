@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NextVideo">
+<meta name="description" content="NextVideo — generate AI videos in your browser with Wan, Seedance, Kling and more. Pay with $NEXT.">
+<meta property="og:title" content="NextVideo · AI Video Studio">
+<meta property="og:description" content="Generate AI videos in your browser. Pay with $NEXT.">
+<meta property="og:image" content="https://nextvideo.top/assets/icons/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>NextVideo · AI Video Studio</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/nextvideo.css">
+</head>
+<body>
+<noscript><div class="mock-banner">Please enable JavaScript to use NextVideo.</div></noscript>
+
+<!-- Header: brand (left) ↔ networks, $NEXT, socials (right) -->
+<header class="app-header">
+  <div class="header-bar">
+    <div class="brand-block">
+      <a class="brand" href="./">
+        <img src="assets/logo.svg" alt="" width="44" height="44">
+        <span class="brand-name nv-wordmark"><span class="nv-word-a">Next</span><span class="nv-word-b">Video</span></span>
+      </a>
+      <p class="subtitle"><span id="brand-tagline">Multi-model AI video studio · Web</span></p>
+    </div>
+    <div class="header-toolbar">
+      <div class="header-actions account-cluster">
+        <div id="header-nets" class="nv-net-stack" aria-label="Networks"></div>
+        <button type="button" id="token-chip" class="btn-credits credits-chip nv-token-chip"><span class="nv-chip-dot" aria-hidden="true"></span><span id="token-chip-text">$NEXT</span></button>
+        <div id="header-socials" class="nv-socials"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Tabs">
+  <div class="tabs-inner" role="tablist">
+    <button role="tab" type="button" data-tab="chat" aria-selected="false">
+      <span class="tab-full">Chat to video</span>
+      <span class="tab-short">Chat</span>
+    </button>
+    <button role="tab" type="button" data-tab="generate" class="active" aria-selected="true">
+      <span class="tab-full">Generate video</span>
+      <span class="tab-short">Generate</span>
+    </button>
+    <button role="tab" type="button" data-tab="tasks">
+      <span class="tab-full">History / Resume</span>
+      <span class="tab-short">History</span>
+    </button>
+    <button role="tab" type="button" data-tab="token">
+      <span class="tab-full" id="tab-token-full">Pay with $NEXT</span>
+      <span class="tab-short" id="tab-token-short">$NEXT</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Contract address strip (all tabs) -->
+<section class="nv-ca-strip" id="ca-strip" aria-label="Contract addresses"></section>
+
+<main class="page">
+
+  <!-- ============ Chat to video ============ -->
+  <section id="panel-chat" class="panel panel-chat" role="tabpanel" hidden>
+    <div class="chat-shell">
+      <header class="chat-top">
+        <div class="chat-top-main">
+          <h1 class="chat-title">Chat to video</h1>
+          <p class="muted small chat-subtitle">Describe your idea in plain words — the assistant shapes it into a shootable prompt.</p>
+        </div>
+        <button type="button" id="chat-reset" class="link link-small">Start over</button>
+      </header>
+      <div class="chat-scroll">
+        <div id="chat-thread" class="chat-thread" aria-live="polite"></div>
+      </div>
+      <div class="chat-dock">
+        <div class="chat-composer">
+          <textarea id="chat-input" rows="3" placeholder="Tell NextVideo what you want to film…"></textarea>
+          <button type="button" id="chat-send" class="btn btn-accent chat-send">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Generate video ============ -->
+  <section id="panel-generate" class="panel" role="tabpanel">
+    <div class="heading">
+      <h1>Generate video</h1>
+      <p>Pick a preset to start, or write your own prompt; tune the settings and get a video with native audio.</p>
+    </div>
+    <div class="columns">
+      <div class="col-left">
+        <section class="card">
+          <h3 class="card-title"><label for="gen-prompt">Video prompt</label></h3>
+          <div class="examples" id="gen-examples">
+            <div class="examples-head">
+              <p class="examples-label">Try a preset</p>
+              <p class="examples-hint">Tap a card to fill a sample prompt and match duration / ratio / resolution.</p>
+            </div>
+            <div class="example-chips" id="gen-example-chips" role="group" aria-label="Presets"></div>
+          </div>
+          <div id="gen-preview-mobile"></div>
+          <textarea id="gen-prompt" rows="10" placeholder="e.g. A seaside café at dawn, the camera slowly pushes in on a latte, waves outside the window, soft warm light."></textarea>
+          <p class="muted small">Describe the subject, scene, action, camera and sound in natural language.</p>
+        </section>
+
+        <details class="card ff-card-details" id="gen-ff-card">
+          <summary class="ff-card-summary">
+            <span class="onboard-chevron" aria-hidden="true">▸</span>
+            <span class="card-title">First frame image (optional)</span>
+            <span class="muted small ff-card-hint">Have a product shot or storyboard? Upload it for steadier results.</span>
+          </summary>
+          <div id="gen-ff-controls">
+            <div class="ff-local">
+              <label class="btn btn-small" for="gen-ff-file">Choose local image</label>
+              <input type="file" id="gen-ff-file" accept="image/*" class="sr-only">
+              <div id="gen-ff-preview" class="ff-preview" hidden>
+                <img id="gen-ff-img" alt="">
+                <span id="gen-ff-info" class="muted small"></span>
+                <button type="button" class="link" id="gen-ff-remove">Remove image</button>
+              </div>
+            </div>
+            <details class="ff-url-details">
+              <summary class="muted small">Or paste a public image URL</summary>
+              <label class="field-label sr-only" for="gen-ff-url">First frame image URL</label>
+              <input type="url" id="gen-ff-url" inputmode="url" autocomplete="off" placeholder="https://… public image URL">
+            </details>
+          </div>
+        </details>
+
+        <section class="card">
+          <h3 class="card-title">Settings</h3>
+          <label class="field-label" for="gen-model">Model</label>
+          <select id="gen-model"></select>
+          <div class="model-desc-row">
+            <span id="gen-model-desc" class="muted small"></span>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label class="field-label" for="gen-duration">Duration (s)</label>
+              <input type="number" id="gen-duration" inputmode="numeric" min="2" max="30" step="1" value="5">
+            </div>
+            <div class="field">
+              <label class="field-label" for="gen-res">Resolution</label>
+              <select id="gen-res"></select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="gen-ratio">Aspect ratio</label>
+              <select id="gen-ratio"></select>
+            </div>
+          </div>
+          <p id="gen-cost" class="muted small cost"></p>
+          <p id="gen-error" class="error" hidden></p>
+          <p class="muted small">Jobs are never resubmitted automatically. If you refresh or close the page, the job keeps running and can be found under History.</p>
+        </section>
+      </div>
+
+      <div class="col-right">
+        <div class="col-right-stack">
+          <div class="gen-sticky-bar" id="gen-sticky-bar">
+            <div class="gen-sticky-inner">
+              <div class="actions gen-primary-actions">
+                <button type="button" id="gen-submit" class="btn btn-accent">Generate video</button>
+              </div>
+            </div>
+          </div>
+          <div id="gen-preview-desktop"><section id="gen-preset-preview" class="card" hidden></section></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="card" id="progress-card">
+      <h3 class="card-title">Progress</h3>
+      <div id="gen-result"><p class="empty">After you submit, progress and the finished video appear here.</p></div>
+    </section>
+  </section>
+
+  <!-- ============ History / Resume ============ -->
+  <section id="panel-tasks" class="panel" role="tabpanel" hidden>
+    <div class="heading">
+      <h1>History / Resume</h1>
+      <p>Keep checking earlier jobs and download them without submitting new ones. Job IDs are stored in this browser.</p>
+    </div>
+    <section class="card">
+      <h3 class="card-title">Your jobs</h3>
+      <div id="tasks-list" class="task-list"></div>
+      <div class="actions">
+        <button type="button" class="btn" id="tasks-copy">Copy all IDs</button>
+        <button type="button" class="btn" id="tasks-clear">Clear finished</button>
+      </div>
+    </section>
+    <section class="card">
+      <h3 class="card-title">Resume another job</h3>
+      <p class="muted">Paste a job ID to keep checking it and download the result.</p>
+      <div class="manual">
+        <input type="text" id="manual-id" autocomplete="off" spellcheck="false" placeholder="Job ID">
+        <button type="button" class="btn btn-accent" id="manual-btn">Check / Download</button>
+      </div>
+      <p id="manual-error" class="error" hidden></p>
+    </section>
+  </section>
+
+  <!-- ============ Pay with $NEXT ============ -->
+  <section id="panel-token" class="panel" role="tabpanel" hidden>
+    <div class="heading">
+      <h1 id="token-title">Pay with $NEXT</h1>
+      <p id="token-desc">Every video on NextVideo is paid with $NEXT.</p>
+    </div>
+    <div class="columns">
+      <div class="col-left">
+        <section class="card nv-token-card" id="token-card"></section>
+        <section class="card">
+          <h3 class="card-title">How paying with $NEXT works</h3>
+          <ol class="nv-steps" id="pay-steps"></ol>
+          <div class="actions">
+            <button type="button" class="btn btn-accent" id="wallet-connect" disabled>Connect wallet</button>
+            <span class="muted small" id="wallet-note">Wallet checkout opens when the generation backend goes live.</span>
+          </div>
+        </section>
+      </div>
+      <div class="col-right">
+        <section class="card">
+          <h3 class="card-title">Pricing</h3>
+          <div id="pricing"></div>
+        </section>
+        <section class="card">
+          <h3 class="card-title">Community</h3>
+          <p class="muted">Contract addresses are only announced on this site and our official channels.</p>
+          <div class="nv-social-list" id="community-links"></div>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<aside class="desktop-cta" aria-labelledby="cta-title">
+  <div class="desktop-cta-inner">
+    <div class="desktop-cta-copy">
+      <p class="desktop-cta-title" id="cta-title">Create AI videos and pay with $NEXT.</p>
+      <p class="desktop-cta-desc" id="cta-desc"></p>
+    </div>
+    <div class="desktop-cta-actions" id="cta-actions"></div>
+  </div>
+</aside>
+
+<footer class="footer" id="footer"></footer>
+
+<div id="statusbar" class="statusbar" role="status">Ready</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="js/config.js"></script>
+<script src="js/chains.js"></script>
+<script src="js/token.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

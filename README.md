@@ -1,1 +1,46 @@
-# nextvideo
+# NextVideo
+
+AI video studio for the web, paid with **$NEXT**. Live at [nextvideo.top](https://nextvideo.top).
+
+Static site (plain HTML / CSS / JS, no build step), deployed on Vercel from `main`.
+
+## Configuration
+
+Everything you may need to change lives in **`js/config.js`**:
+
+| Setting | Where |
+|---|---|
+| Brand name, tagline, email | `brand` |
+| Token name / symbol | `token.name`, `token.symbol` |
+| Single or multi network | `token.mode` = `"single"` or `"multi"` |
+| Network shown in single mode | `token.singleNetwork` = `solana` · `robinhood` · `base` · `bsc` |
+| Network order in multi mode | `token.multiOrder` |
+| Contract addresses | `token.evmAddress` (Robinhood / Base / BSC), `token.solanaAddress` |
+| Per-network CA / tagline (single mode) | `token.chains.<network>.ca`, `.tagline` |
+| X / Telegram | `socials.x`, `socials.telegram` |
+| $NEXT price per second | `pricing`, e.g. `{ "720p": 10, "1080p": 20 }` |
+| Backend API | `api.baseUrl` (empty = preview, nothing is submitted) |
+| Models and presets | `models`, `presets` |
+
+### Modes
+
+- **single** — only `singleNetwork` is shown, and the whole site is themed in that network's colors (Solana purple/green, Robinhood lime, Base blue, BNB yellow).
+- **multi** — always shows all 4 networks (Solana, Robinhood, Base, BSC). Robinhood, Base and BSC share one contract address (`evmAddress`); Solana uses `solanaAddress`.
+
+## Files
+
+```
+index.html            page markup
+css/style.css         base layout (from PowerTokens Video Studio Web, MIT)
+css/nextvideo.css     NextVideo brand + per-network themes
+js/config.js          all settings
+js/chains.js          network registry, single/multi logic, CA grouping
+js/token.js           $NEXT UI: CA cards + copy, pay tab, socials, footer
+js/app.js             studio UI: tabs, presets, models, history, chat
+assets/logo.svg       NextVideo logo
+assets/chains/*.svg   network icons
+```
+
+## Credits
+
+UI based on [PowerTokens/video-studio-web](https://github.com/PowerTokens/video-studio-web) (MIT). See `LICENSE`.
