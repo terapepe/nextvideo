@@ -7,13 +7,13 @@ window.NEXTVIDEO_CONFIG = {
   },
 
   token: {
-    name: "NextVideo",
+    name: "Next",
     symbol: "NEXT",
     mode: "single",
     singleNetwork: "base",
     multiOrder: ["solana", "robinhood", "base", "bsc"],
 
-    evmAddress: "",
+    evmAddress: "0x05675a5e05eb1748584fa38c70f74f9a2235d001",
     solanaAddress: "",
 
     chains: {
@@ -25,8 +25,8 @@ window.NEXTVIDEO_CONFIG = {
   },
 
   socials: {
-    x: "",        // handle without @  → https://x.com/NextVideo
-    telegram: ""  // handle or group   → https://t.me/NextVideo
+    x: "",        // handle without @  → https://x.com/
+    telegram: ""  // handle or group   → https://t.me/
   },
 
   api: {
