@@ -49,10 +49,46 @@ window.NEXTVIDEO_CONFIG = {
   pricing: {},
 
   defaultModel: "dreamina-seedance-2-0-mini-260615",
+  // Providers shown on the Providers page and as Models filters.
+  providers: {
+    "alibaba": {
+      "name": "Alibaba",
+      "tagline": "Wan video models",
+      "color": "#FF6A00"
+    },
+    "byteplus": {
+      "name": "BytePlus",
+      "tagline": "Seedance video models by ByteDance",
+      "color": "#3370FF"
+    },
+    "minimax": {
+      "name": "MiniMax",
+      "tagline": "MiniMax H3 and Hailuo",
+      "color": "#E2457A"
+    },
+    "vidu": {
+      "name": "Vidu",
+      "tagline": "Vidu models by Shengshu Technology",
+      "color": "#7C5CFF"
+    },
+    "kling": {
+      "name": "Kling",
+      "tagline": "Kling models by Kuaishou",
+      "color": "#22C55E"
+    }
+  },
+
+  // provider = key in providers; types = Models page type filters.
   models: [
     {
       "id": "wan3.0-video",
       "name": "Wan 3.0",
+      "provider": "alibaba",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "All-in-one Wan model for text-to-video, image-to-video (first / first-last frame), and reference-to-video with native audio. Up to 30 seconds at 480p–1080p — a solid default for product demos, talking-head clips, and everyday videos.",
       "durations": [
         2,
@@ -75,6 +111,12 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "wan3.0-video-prime",
       "name": "Wan 3.0 Prime",
+      "provider": "alibaba",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "Same capabilities as Wan 3.0 (text / image / reference, up to 30s, 480p–1080p, native audio), tuned for significantly faster end-to-end generation when you want quicker turnaround.",
       "durations": [
         2,
@@ -97,6 +139,12 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "dreamina-seedance-2-0-260128",
       "name": "Seedance 2.0",
+      "provider": "byteplus",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "Seedance 2.0 is the full-quality model for text-to-video, image-to-video, and multimodal reference, with native audio. Clips are 4–15 seconds at 480p, 720p, 1080p, or 4K.",
       "durations": [
         4,
@@ -121,6 +169,12 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "dreamina-seedance-2-0-fast-260128",
       "name": "Seedance 2.0 Fast",
+      "provider": "byteplus",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "Seedance 2.0 Fast prioritizes speed for drafts and previews: text-to-video, image-to-video, and multimodal reference, with native audio. Clips are 4–15 seconds and top out at 720p (no 1080p).",
       "durations": [
         4,
@@ -143,6 +197,12 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "dreamina-seedance-2-0-mini-260615",
       "name": "Seedance 2.0 Mini",
+      "provider": "byteplus",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "Seedance 2.0 Mini prioritizes lower cost and faster turnaround for high-volume clips: text-to-video, image-to-video, and multimodal reference, with native audio. Clips are 4–15 seconds and top out at 720p (no 1080p).",
       "durations": [
         4,
@@ -165,6 +225,12 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "dreamina-seedance-2-5-260628",
       "name": "Seedance 2.5",
+      "provider": "byteplus",
+      "types": [
+        "Text to Video",
+        "Image to Video",
+        "Video to Video"
+      ],
       "description": "Seedance 2.5 targets longer storytelling with native audio sync, up to 30 seconds and 480p–1080p. Supports text-to-video, image-to-video, and multimodal references for scene and character consistency.",
       "durations": [
         4,
@@ -188,6 +254,10 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "MiniMax-H3",
       "name": "MiniMax H3",
+      "provider": "minimax",
+      "types": [
+        "Text to Video"
+      ],
       "description": "MiniMax H3 generates 4–15 second clips at 768p or 2K with text-to-video (Studio). Multimodal reference and image conditioning are available on the API; this build focuses on text-to-video.",
       "durations": [
         4,
@@ -209,6 +279,10 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "MiniMax-Hailuo-2.3",
       "name": "Hailuo 2.3",
+      "provider": "minimax",
+      "types": [
+        "Text to Video"
+      ],
       "description": "Hailuo 2.3 text-to-video at 768p or 1080p with fixed 6 or 10 second clips (1080p is 6 seconds only). Priced per clip on PowerTokens.",
       "durations": [
         6,
@@ -225,6 +299,11 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "viduq4-preview",
       "name": "Vidu Q4 Preview",
+      "provider": "vidu",
+      "types": [
+        "Text to Video",
+        "Image to Video"
+      ],
       "description": "Vidu Q4 Preview (I2V / reference-to-video only — no text-only). Clips 3–16 seconds at 540p–4K with optional native audio. Attach a first frame or reference images to generate.",
       "durations": [
         3,
@@ -248,6 +327,11 @@ window.NEXTVIDEO_CONFIG = {
     {
       "id": "kling-v3",
       "name": "kling v3",
+      "provider": "kling",
+      "types": [
+        "Text to Video",
+        "Image to Video"
+      ],
       "description": "kling v3 offers text-to-video and image-to-video (first / last frame) with optional native audio. Duration 3–15 seconds; choose 720p, 1080p, or 4K mode when you need higher output resolution.",
       "durations": [
         3,

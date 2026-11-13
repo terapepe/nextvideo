@@ -24,9 +24,12 @@
   function status(m) { $('statusbar').textContent = m; }
 
   // ---------- tabs ----------
-  var TABS = ['generate', 'chat', 'compare', 'batch', 'tasks', 'token'];
-  function showTab(name) {
+  var TABS = ['generate', 'chat', 'compare', 'batch', 'tasks'];
+  // Studio sub-tabs. 'token' (and other pages) go through the router.
+  function showTab(name, stay) {
+    if (name === 'token') { g.NVRouter.go('token'); return; }
     if (TABS.indexOf(name) < 0) name = 'generate';
+    if (!stay) g.NVRouter.go('studio', { keepScroll: true });
     document.querySelectorAll('.tabs [data-tab]').forEach(function (b) {
       var on = b.dataset.tab === name;
       b.classList.toggle('active', on);
@@ -36,7 +39,7 @@
     store(LS.tab, name);
   }
   document.querySelectorAll('.tabs [data-tab]').forEach(function (b) {
-    b.addEventListener('click', function () { showTab(b.dataset.tab); });
+    b.addEventListener('click', function () { showTab(b.dataset.tab, true); });
   });
 
   // ---------- model + params ----------
@@ -353,7 +356,13 @@
       if (!q) return null;
       return MODELS.filter(function (m) { return m.id.toLowerCase() === q || m.name.toLowerCase() === q; })[0] || null;
     },
-    prompt: function () { return $('gen-prompt').value; } };
+    prompt: function () { return $('gen-prompt').value; },
+    setModel: function (id) {
+      var sel = $('gen-model');
+      if (!MODELS.some(function (m) { return m.id === id; })) return;
+      sel.value = id; sel.dispatchEvent(new Event('change'));
+      showTab('generate');
+    } };
   document.addEventListener('DOMContentLoaded', function () {
     initModels();
     initPresets();
@@ -363,8 +372,8 @@
     initGenerate();
     initTasks();
     initChat();
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    showTab(load(LS.tab) || 'generate');
+    var saved = load(LS.tab);
+    showTab(TABS.indexOf(saved) >= 0 ? saved : 'generate', true);
     status(API ? 'Ready' : 'Preview · generation backend not connected yet');
   });
 })(window);

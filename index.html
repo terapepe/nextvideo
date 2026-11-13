@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0d0f14">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="NextVideo">
@@ -25,29 +26,135 @@
 <body>
 <noscript><div class="mock-banner">Please enable JavaScript to use NextVideo.</div></noscript>
 
-<!-- Header: brand (left) ↔ networks, $NEXT, socials (right) -->
-<header class="app-header">
-  <div class="header-bar">
-    <div class="brand-block">
-      <a class="brand" href="./">
-        <img src="assets/logo.svg" alt="" width="44" height="44">
-        <span class="brand-name nv-wordmark"><span class="nv-word-a">Next</span><span class="nv-word-b">Video</span></span>
-      </a>
-      <p class="subtitle"><span id="brand-tagline">Multi-model AI video generation</span></p>
+<aside class="nv-sidebar" id="sidebar" aria-label="Main">
+  <a class="nv-side-brand" href="/" data-page="dashboard">
+    <img src="assets/logo.svg" alt="" width="34" height="34">
+    <span class="nv-wordmark"><span class="nv-word-a">Next</span><span class="nv-word-b">Video</span></span>
+  </a>
+  <nav class="nv-nav">
+      <a class="nv-nav-link" href="/" data-page="dashboard"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span></a>
+      <a class="nv-nav-link" href="/models" data-page="models"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4z"/><path d="M4 7.4l8 4.6 8-4.6M12 12v9.2"/></svg><span>Models</span></a>
+      <a class="nv-nav-link" href="/providers" data-page="providers"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg><span>Providers</span></a>
+      <a class="nv-nav-link" href="/pricing" data-page="pricing"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span>Pricing</span></a>
+      <a class="nv-nav-link" href="/api-keys" data-page="api-keys"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 20 3M16 7l3 3M18 5l2 2"/></svg><span>API Keys</span></a>
+      <a class="nv-nav-link" href="/studio" data-page="studio"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="2.5"/><path d="M16.5 10.5 21.5 7.5v9l-5-3"/></svg><span>Video Studio</span></a>
+      <a class="nv-nav-link" href="/token" data-page="token"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2c-.5-.9-1.6-1.5-2.8-1.5-1.7 0-3 1-3 2.3s1.3 2 3 2.3 3 1 3 2.3-1.3 2.3-3 2.3c-1.2 0-2.3-.6-2.8-1.5M12 6v1.7M12 16.6v1.7"/></svg><span id="nav-token-label">$NEXT Token</span></a>
+  </nav>
+  <div class="nv-nav nv-nav-ext" id="nav-socials"></div>
+  <p class="nv-side-tagline" id="brand-tagline">Multi-model AI video generation</p>
+</aside>
+<div class="nv-scrim" id="scrim" hidden></div>
+
+<div class="nv-shell">
+  <header class="nv-topbar">
+    <button type="button" class="nv-burger" id="burger" aria-label="Open menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="nv-top-brand" href="/" data-page="dashboard"><img src="assets/logo.svg" alt="" width="28" height="28"></a>
+    <p class="nv-crumb"><span class="nv-crumb-root">NextVideo</span><span class="nv-crumb-sep">/</span><span id="crumb">Dashboard</span></p>
+    <div class="nv-top-actions account-cluster">
+      <div id="header-nets" class="nv-net-stack" aria-label="Networks"></div>
+      <button type="button" id="wallet-btn" class="nv-wallet-btn">Connect wallet</button>
+      <button type="button" id="token-chip" class="btn-credits credits-chip nv-token-chip"><span class="nv-chip-dot" aria-hidden="true"></span><span id="token-chip-text">$NEXT</span></button>
+      <div id="header-socials" class="nv-socials"></div>
     </div>
-    <div class="header-toolbar">
-      <div class="header-actions account-cluster">
-        <div id="header-nets" class="nv-net-stack" aria-label="Networks"></div>
-        <button type="button" id="wallet-btn" class="nv-wallet-btn">Connect wallet</button>
-        <button type="button" id="token-chip" class="btn-credits credits-chip nv-token-chip"><span class="nv-chip-dot" aria-hidden="true"></span><span id="token-chip-text">$NEXT</span></button>
-        <div id="header-socials" class="nv-socials"></div>
+  </header>
+
+  <!-- Contract address strip (all pages) -->
+  <section class="nv-ca-strip" id="ca-strip" aria-label="Contract addresses"></section>
+
+  <main class="page">
+
+  <!-- ============ Dashboard ============ -->
+  <section class="nv-page" data-page="dashboard">
+    <div class="nv-hero">
+      <div class="nv-hero-copy">
+        <p class="nv-eyebrow" id="dash-eyebrow">AI video studio · Paid with $NEXT</p>
+        <h1>Create AI videos with top-tier models</h1>
+        <p class="muted">Wan, Seedance, Kling, Vidu, MiniMax and more in one studio — generate, compare and batch-produce clips, paid with <span class="nv-sym">$NEXT</span>.</p>
+        <div class="actions">
+          <a class="btn btn-accent" href="/studio" data-page="studio">Open Video Studio</a>
+          <a class="btn" href="/models" data-page="models">Browse models</a>
+        </div>
+      </div>
+      <img class="nv-hero-logo" src="assets/logo.svg" alt="" width="120" height="120">
+    </div>
+    <div class="nv-stats" id="dash-stats"></div>
+    <div class="nv-section-head"><h2>Featured models</h2><a class="link" href="/models" data-page="models">View all →</a></div>
+    <div class="nv-model-grid" id="dash-models"></div>
+  </section>
+
+  <!-- ============ Models ============ -->
+  <section class="nv-page" data-page="models" hidden>
+    <div class="heading">
+      <h1>Models</h1>
+      <p>Explore and use top-tier AI video models in one studio.</p>
+    </div>
+    <section class="card nv-filters">
+      <div class="nv-filters-head">
+        <h3 class="card-title">Filters</h3>
+        <div class="nv-filters-search">
+          <span class="muted" id="models-count"></span>
+          <label class="nv-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="text" id="models-search" placeholder="Search models or providers…" aria-label="Search models"></label>
+        </div>
+      </div>
+      <div class="nv-filter-row"><span class="nv-filter-label">Providers</span><div class="nv-chips" id="filter-providers"></div></div>
+      <div class="nv-filter-row"><span class="nv-filter-label">Model type</span><div class="nv-chips" id="filter-types"></div></div>
+    </section>
+    <div class="nv-model-grid" id="models-grid"></div>
+  </section>
+
+  <!-- ============ Providers ============ -->
+  <section class="nv-page" data-page="providers" hidden>
+    <div class="heading">
+      <h1>Providers</h1>
+      <p>The model families available on NextVideo.</p>
+    </div>
+    <div class="nv-provider-grid" id="providers-grid"></div>
+  </section>
+
+  <!-- ============ Pricing ============ -->
+  <section class="nv-page" data-page="pricing" hidden>
+    <div class="heading">
+      <h1>Pricing</h1>
+      <p id="pricing-desc">Every video is paid with $NEXT. Price depends on resolution and length.</p>
+    </div>
+    <section class="card">
+      <h3 class="card-title" id="pricing-title">$NEXT per second</h3>
+      <div id="pricing"></div>
+    </section>
+    <section class="card">
+      <h3 class="card-title">Model limits</h3>
+      <div class="nv-table-wrap"><table class="nv-table" id="limits-table"></table></div>
+    </section>
+  </section>
+
+  <!-- ============ API Keys ============ -->
+  <section class="nv-page" data-page="api-keys" hidden>
+    <div class="heading">
+      <h1>API Keys</h1>
+      <p>Use NextVideo from your own apps and scripts. Keys are tied to the wallet that holds your $NEXT.</p>
+    </div>
+    <div class="columns">
+      <div class="col-left">
+        <section class="card">
+          <div class="nv-section-head nv-in-card"><h3 class="card-title">Your keys</h3><button type="button" class="btn btn-accent btn-small" id="key-create">Create API key</button></div>
+          <div id="keys-list"><p class="empty">No API keys yet.</p></div>
+          <div id="keys-gate"></div>
+        </section>
+      </div>
+      <div class="col-right">
+        <section class="card">
+          <h3 class="card-title">How keys work</h3>
+          <ol class="nv-steps" id="keys-steps"></ol>
+          <p class="muted small">Keep keys secret. Anyone with a key can generate videos billed to your wallet.</p>
+        </section>
       </div>
     </div>
-  </div>
-</header>
+  </section>
 
-<nav class="tabs" aria-label="Tabs">
-  <div class="tabs-inner" role="tablist">
+  <!-- ============ Video Studio ============ -->
+  <section class="nv-page" data-page="studio" hidden>
+  <nav class="tabs" aria-label="Video Studio">
+    <div class="tabs-inner" role="tablist">
     <button role="tab" type="button" data-tab="generate" class="active" aria-selected="true">
       <span class="tab-full">Generate video</span>
       <span class="tab-short">Generate</span>
@@ -68,18 +175,8 @@
       <span class="tab-full">History / Resume</span>
       <span class="tab-short">History</span>
     </button>
-    <button role="tab" type="button" data-tab="token" aria-selected="false">
-      <span class="tab-full" id="tab-token-full">Pay with $NEXT</span>
-      <span class="tab-short" id="tab-token-short">$NEXT</span>
-    </button>
-  </div>
-</nav>
-
-<!-- Contract address strip (all tabs) -->
-<section class="nv-ca-strip" id="ca-strip" aria-label="Contract addresses"></section>
-
-<main class="page">
-
+    </div>
+  </nav>
   <!-- ============ Chat to video ============ -->
   <section id="panel-chat" class="panel panel-chat" role="tabpanel" hidden>
     <div class="chat-shell">
@@ -340,8 +437,11 @@
     </section>
   </section>
 
-  <!-- ============ Pay with $NEXT ============ -->
-  <section id="panel-token" class="panel" role="tabpanel" hidden>
+  </section>
+
+  <!-- ============ $NEXT Token ============ -->
+  <section class="nv-page" data-page="token" hidden>
+  <section id="panel-token">
     <div class="heading">
       <h1 id="token-title">Pay with $NEXT</h1>
       <p id="token-desc">Every video on NextVideo is paid with $NEXT.</p>
@@ -361,7 +461,8 @@
       <div class="col-right">
         <section class="card">
           <h3 class="card-title">Pricing</h3>
-          <div id="pricing"></div>
+          <p class="muted">Video prices in <span class="nv-sym">$NEXT</span> by resolution and length.</p>
+          <div class="actions"><a class="btn btn-small" href="/pricing" data-page="pricing">See pricing →</a></div>
         </section>
         <section class="card">
           <h3 class="card-title">Community</h3>
@@ -371,9 +472,10 @@
       </div>
     </div>
   </section>
-</main>
+  </section>
+  </main>
 
-<aside class="desktop-cta" aria-labelledby="cta-title">
+  <aside class="desktop-cta" aria-labelledby="cta-title">
   <div class="desktop-cta-inner">
     <div class="desktop-cta-copy">
       <p class="desktop-cta-title" id="cta-title">Create AI videos and pay with $NEXT.</p>
@@ -383,7 +485,11 @@
   </div>
 </aside>
 
-<footer class="footer" id="footer"></footer>
+  <footer class="footer" id="footer"></footer>
+  <div id="statusbar" class="statusbar" role="status">Ready</div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 <div id="wallet-modal" class="nv-modal" hidden>
   <div class="nv-modal-card" role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
@@ -396,11 +502,9 @@
   </div>
 </div>
 
-<div id="statusbar" class="statusbar" role="status">Ready</div>
-<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-
 <script src="js/config.js"></script>
 <script src="js/chains.js"></script>
+<script src="js/router.js"></script>
 <script src="js/token.js"></script>
 <script src="js/wallet.js"></script>
 <script src="js/wallet-ui.js"></script>
@@ -408,5 +512,6 @@
 <script src="js/xlsx-lite.js"></script>
 <script src="js/compare.js"></script>
 <script src="js/batch.js"></script>
+<script src="js/pages.js"></script>
 </body>
 </html>

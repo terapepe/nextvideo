@@ -4,7 +4,10 @@ AI video studio for the web, paid with **$NEXT**. Live at [nextvideo.top](https:
 
 Static site (plain HTML / CSS / JS, no build step), deployed on Vercel from `main`.
 
-Tabs follow the PowerTokens Video Studio desktop app: **Generate video** (presets, prompt detection, reference media, seed),
+Layout follows the powertokens.ai platform (dark theme, sidebar): **Dashboard**, **Models** (provider / type filters, search),
+**Providers**, **Pricing**, **API Keys**, **Video Studio** and **$NEXT Token**. URLs are clean paths (`/models`, `/studio` …) via `vercel.json` rewrites.
+
+Video Studio tabs follow the PowerTokens Video Studio desktop app: **Generate video** (presets, prompt detection, reference media, seed),
 **Chat**, **Compare models** (2–3 models side by side), **Batch import** (Excel / CSV, series characters, continue from previous clip),
 **History / Resume** and **Pay with $NEXT** (wallet + contract addresses). Generating requires a wallet holding $NEXT.
 
@@ -24,7 +27,7 @@ Everything you may need to change lives in **`js/config.js`**:
 | X / Telegram | `socials.x`, `socials.telegram` |
 | $NEXT price per second | `pricing`, e.g. `{ "720p": 10, "1080p": 20 }` |
 | Backend API | `api.baseUrl` (empty = preview, nothing is submitted) |
-| Models and presets | `models`, `presets` |
+| Models, providers and presets | `models` (`provider`, `types`), `providers`, `presets` |
 
 ### Modes
 
@@ -41,6 +44,8 @@ js/config.js          all settings
 js/chains.js          network registry, single/multi logic, CA grouping
 js/token.js           $NEXT UI: CA cards + copy, pay tab, socials, footer
 js/app.js             studio UI: tabs, presets, models, detection, reference media, history, chat
+js/router.js          page router (clean URLs) + mobile sidebar
+js/pages.js           Dashboard, Models, Providers, Pricing, API Keys
 js/compare.js         Compare models tab
 js/batch.js           Batch import tab (desktop-compatible column headers)
 js/xlsx-lite.js       dependency-free .xlsx / .csv reader

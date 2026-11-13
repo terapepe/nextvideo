@@ -82,7 +82,7 @@
     var row = el('div', 'actions');
     if (s === 'empty') {
       var b = el('button', 'btn btn-accent btn-small', 'Get ' + SYM); b.type = 'button';
-      b.addEventListener('click', function () { if (g.NVApp) g.NVApp.showTab('token'); });
+      b.addEventListener('click', function () { g.NVRouter.go('token'); });
       row.appendChild(b);
     }
     if (s === 'error') {

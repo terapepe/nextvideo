@@ -111,11 +111,19 @@
     });
     stack.title = C.isSingle ? 'Live on ' + C.primary.name : 'Live on ' + C.names(C.active);
     $('token-chip-text').textContent = SYM;
-    $('token-chip').addEventListener('click', function () { if (g.NVApp) g.NVApp.showTab('token'); });
-    $('tab-token-full').textContent = 'Pay with ' + SYM;
-    $('tab-token-short').textContent = SYM;
+    $('token-chip').addEventListener('click', function () { g.NVRouter.go('token'); });
+    $('nav-token-label').textContent = SYM + ' Token';
+    document.querySelectorAll('.nv-sym').forEach(function (n) { n.textContent = SYM; });
     var soc = $('header-socials'); soc.innerHTML = '';
     socialLinks(true).forEach(function (a) { soc.appendChild(a); });
+    var nav = $('nav-socials'); nav.innerHTML = '';
+    socialLinks(true).forEach(function (a) {
+      a.className = 'nv-nav-link';
+      var lbl = a.getAttribute('aria-label').split(' ')[0];
+      a.appendChild(el('span', '', lbl));
+      var ext = el('span', 'nv-nav-ext-ic'); ext.innerHTML = ICON.ext; a.appendChild(ext);
+      nav.appendChild(a);
+    });
   }
 
   function socialLinks(iconOnly) {
@@ -274,7 +282,7 @@
     $('cta-desc').textContent = C.isSingle ? 'Live on ' + C.primary.name + '.' : 'Live on ' + C.names(C.active) + '.';
     var box = $('cta-actions'); box.innerHTML = '';
     var buy = el('button', 'btn btn-accent'); buy.type = 'button'; buy.textContent = 'Get ' + SYM;
-    buy.addEventListener('click', function () { if (g.NVApp) g.NVApp.showTab('token'); });
+    buy.addEventListener('click', function () { g.NVRouter.go('token'); });
     box.appendChild(buy);
     if (tgUrl()) {
       var tg = el('a', 'btn'); tg.href = tgUrl(); tg.target = '_blank'; tg.rel = 'noopener';
