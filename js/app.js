@@ -34,7 +34,6 @@
     });
     TABS.forEach(function (t) { $('panel-' + t).hidden = t !== name; });
     store(LS.tab, name);
-    if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
   }
   document.querySelectorAll('.tabs [data-tab]').forEach(function (b) {
     b.addEventListener('click', function () { showTab(b.dataset.tab); });
@@ -287,7 +286,8 @@
     initGenerate();
     initTasks();
     initChat();
-    showTab((location.hash || '').slice(1) || load(LS.tab) || 'generate');
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    showTab(load(LS.tab) || 'generate');
     status(API ? 'Ready' : 'Preview · generation backend not connected yet');
   });
 })(window);
