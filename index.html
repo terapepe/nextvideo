@@ -38,6 +38,7 @@
     <div class="header-toolbar">
       <div class="header-actions account-cluster">
         <div id="header-nets" class="nv-net-stack" aria-label="Networks"></div>
+        <button type="button" id="wallet-btn" class="nv-wallet-btn">Connect wallet</button>
         <button type="button" id="token-chip" class="btn-credits credits-chip nv-token-chip"><span class="nv-chip-dot" aria-hidden="true"></span><span id="token-chip-text">$NEXT</span></button>
         <div id="header-socials" class="nv-socials"></div>
       </div>
@@ -256,12 +257,25 @@
 
 <footer class="footer" id="footer"></footer>
 
+<div id="wallet-modal" class="nv-modal" hidden>
+  <div class="nv-modal-card" role="dialog" aria-modal="true" aria-labelledby="wallet-modal-title">
+    <div class="nv-modal-head">
+      <h2 id="wallet-modal-title">Connect wallet</h2>
+      <button type="button" id="wallet-modal-close" class="nv-modal-close" aria-label="Close">×</button>
+    </div>
+    <div id="wallet-modal-body"></div>
+    <p class="muted small nv-modal-foot">Connecting only reads your address and $NEXT balance. NextVideo never asks for your seed phrase.</p>
+  </div>
+</div>
+
 <div id="statusbar" class="statusbar" role="status">Ready</div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="js/config.js"></script>
 <script src="js/chains.js"></script>
 <script src="js/token.js"></script>
+<script src="js/wallet.js"></script>
+<script src="js/wallet-ui.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

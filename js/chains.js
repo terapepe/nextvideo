@@ -8,16 +8,20 @@
   var token = cfg.token || {};
   var overrides = token.chains || {};
 
-  // Built-in network defaults. name/short/color/tagline/ca can be overridden in config.token.chains.
+  // Built-in network defaults. name/short/color/tagline/ca/rpc can be overridden in config.token.chains.
   var BASE = [
     { key: 'solana', vm: 'svm', name: 'Solana', short: 'SOL', color: '#9945FF', color2: '#14F195',
-      icon: 'assets/chains/solana.svg', explorer: 'https://solscan.io/token/', dex: 'solana' },
+      icon: 'assets/chains/solana.svg', explorer: 'https://solscan.io/token/', dex: 'solana',
+      rpc: 'https://api.mainnet-beta.solana.com' },
     { key: 'robinhood', vm: 'evm', name: 'Robinhood', short: 'RH', color: '#CCFF00', color2: '#9BCB00',
-      icon: 'assets/chains/robinhood.svg', explorer: 'https://robinhoodchain.blockscout.com/token/', dex: 'robinhood' },
+      icon: 'assets/chains/robinhood.svg', explorer: 'https://robinhoodchain.blockscout.com/token/', dex: 'robinhood',
+      chainId: 4663, rpc: 'https://rpc.mainnet.chain.robinhood.com', native: 'ETH', explorerHome: 'https://robinhoodchain.blockscout.com' },
     { key: 'base', vm: 'evm', name: 'Base', short: 'BASE', color: '#0052FF', color2: '#3C8AFF',
-      icon: 'assets/chains/base.svg', explorer: 'https://basescan.org/token/', dex: 'base' },
+      icon: 'assets/chains/base.svg', explorer: 'https://basescan.org/token/', dex: 'base',
+      chainId: 8453, rpc: 'https://mainnet.base.org', native: 'ETH', explorerHome: 'https://basescan.org' },
     { key: 'bsc', vm: 'evm', name: 'BNB Chain', short: 'BSC', color: '#F0B90B', color2: '#F8D12F',
-      icon: 'assets/chains/bsc.svg', explorer: 'https://bscscan.com/token/', dex: 'bsc' }
+      icon: 'assets/chains/bsc.svg', explorer: 'https://bscscan.com/token/', dex: 'bsc',
+      chainId: 56, rpc: 'https://bsc-dataseed.bnbchain.org', native: 'BNB', explorerHome: 'https://bscscan.com' }
   ];
 
   function clean(o) {

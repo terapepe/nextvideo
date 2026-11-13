@@ -172,24 +172,16 @@
 
   // ---------- generate ----------
   function showResult(node) { var r = $('gen-result'); r.innerHTML = ''; r.appendChild(node); }
-  function notLive(where) {
-    var box = el('div', 'nv-notice');
-    box.appendChild(el('strong', '', 'Generation backend not connected yet'));
-    box.appendChild(el('p', 'muted', where + ' Your prompt and settings are kept in this browser, and nothing was charged.'));
-    var a = el('button', 'btn btn-small'); a.type = 'button'; a.textContent = 'Get ' + SYM + ' ready';
-    a.addEventListener('click', function () { showTab('token'); });
-    box.appendChild(a);
-    return box;
-  }
   function initGenerate() {
     $('gen-submit').addEventListener('click', function () {
       var err = $('gen-error');
       err.hidden = true;
       var prompt = $('gen-prompt').value.trim();
       if (!prompt) { err.textContent = 'Write a prompt or pick a preset first.'; err.hidden = false; return; }
-      if (!API) {
-        showResult(notLive('NextVideo is in preview — the Generate button will submit real jobs once the API goes live.'));
-        status('Preview · generation backend not connected');
+      // Only wallets holding $NEXT can generate.
+      if (!API || g.NVWallet.holderStatus() !== 'holder') {
+        showResult(g.NVWalletUI.gate());
+        status(g.NVWallet.state.address ? 'Wallet connected · ' + g.NVWallet.short(g.NVWallet.state.address) : 'Connect a wallet holding ' + SYM + ' to generate');
         $('progress-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
