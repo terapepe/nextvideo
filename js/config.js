@@ -5,7 +5,7 @@
 window.NEXTVIDEO_CONFIG = {
   brand: {
     name: "NextVideo",
-    tagline: "Multi-model AI video studio · Web",
+    tagline: "Multi-model AI video generation",
     site: "https://nextvideo.top",
     email: "cre@nextvideo.top"
   },

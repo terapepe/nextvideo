@@ -148,8 +148,7 @@
   function refresh() {
     renderHeader();
     if (!$('wallet-modal').hidden) renderModal();
-    var r = $('gen-result');
-    if (r && r.querySelector('.nv-gate')) { r.innerHTML = ''; r.appendChild(gate()); }
+    document.querySelectorAll('.nv-gate').forEach(function (n) { n.replaceWith(gate()); });
   }
 
   document.addEventListener('DOMContentLoaded', function () {

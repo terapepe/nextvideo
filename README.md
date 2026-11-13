@@ -4,6 +4,10 @@ AI video studio for the web, paid with **$NEXT**. Live at [nextvideo.top](https:
 
 Static site (plain HTML / CSS / JS, no build step), deployed on Vercel from `main`.
 
+Tabs follow the PowerTokens Video Studio desktop app: **Generate video** (presets, prompt detection, reference media, seed),
+**Chat**, **Compare models** (2–3 models side by side), **Batch import** (Excel / CSV, series characters, continue from previous clip),
+**History / Resume** and **Pay with $NEXT** (wallet + contract addresses). Generating requires a wallet holding $NEXT.
+
 ## Configuration
 
 Everything you may need to change lives in **`js/config.js`**:
@@ -36,11 +40,17 @@ css/nextvideo.css     NextVideo brand + per-network themes
 js/config.js          all settings
 js/chains.js          network registry, single/multi logic, CA grouping
 js/token.js           $NEXT UI: CA cards + copy, pay tab, socials, footer
-js/app.js             studio UI: tabs, presets, models, history, chat
+js/app.js             studio UI: tabs, presets, models, detection, reference media, history, chat
+js/compare.js         Compare models tab
+js/batch.js           Batch import tab (desktop-compatible column headers)
+js/xlsx-lite.js       dependency-free .xlsx / .csv reader
+js/wallet.js          wallet connect + on-chain $NEXT balance check
+js/wallet-ui.js       wallet button, connect modal, holder gate
+assets/templates/     batch sample spreadsheets
 assets/logo.svg       NextVideo logo
 assets/chains/*.svg   network icons
 ```
 
 ## Credits
 
-UI based on [PowerTokens/video-studio-web](https://github.com/PowerTokens/video-studio-web) (MIT). See `LICENSE`.
+UI based on [PowerTokens/video-studio-web](https://github.com/PowerTokens/video-studio-web) and [PowerTokens/video-studio](https://github.com/PowerTokens/video-studio) (MIT). See `LICENSE`.

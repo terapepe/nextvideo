@@ -24,7 +24,7 @@
   function status(m) { $('statusbar').textContent = m; }
 
   // ---------- tabs ----------
-  var TABS = ['chat', 'generate', 'tasks', 'token'];
+  var TABS = ['generate', 'chat', 'compare', 'batch', 'tasks', 'token'];
   function showTab(name) {
     if (TABS.indexOf(name) < 0) name = 'generate';
     document.querySelectorAll('.tabs [data-tab]').forEach(function (b) {
@@ -67,6 +67,7 @@
     d.value = Math.min(m.durations[1], Math.max(m.durations[0], v));
   }
   function updateCost() {
+    renderSetup();
     var p = cfg.pricing || {}, res = $('gen-res').value, per = p[res];
     var c = $('gen-cost');
     if (per == null || per === '') { c.textContent = ''; return; }
@@ -86,7 +87,80 @@
     });
     $('gen-duration').addEventListener('change', function () { clampDuration(); updateCost(); });
     $('gen-res').addEventListener('change', updateCost);
+    $('gen-ratio').addEventListener('change', updateCost);
     applyModel();
+  }
+
+  // ---------- detect duration / ratio from the prompt (English + Chinese) ----------
+  function detect(text) {
+    var out = {};
+    var d = /(\d{1,2})\s*-?\s*(?:s|sec|secs|second|seconds|秒)(?![a-z])/i.exec(text || '');
+    if (d) out.duration = parseInt(d[1], 10);
+    var r = /(?:^|[^\d])(21:9|16:9|9:16|4:3|3:4|1:1)(?!\d)/.exec(text || '');
+    if (r) out.ratio = r[1];
+    else if (/\b(vertical|portrait)\b|竖屏|竖版/i.test(text || '')) out.ratio = '9:16';
+    else if (/\b(landscape|horizontal|widescreen)\b|横屏|横版/i.test(text || '')) out.ratio = '16:9';
+    else if (/\bsquare\b|方形/i.test(text || '')) out.ratio = '1:1';
+    return out;
+  }
+  function applyDetect() {
+    var hint = $('gen-detected');
+    if (!$('gen-detect').checked) { hint.hidden = true; return; }
+    var det = detect($('gen-prompt').value), m = model(), parts = [];
+    if (det.duration && m) { $('gen-duration').value = det.duration; clampDuration(); parts.push($('gen-duration').value + ' s'); }
+    if (det.ratio && m && m.ratios.indexOf(det.ratio) >= 0) { $('gen-ratio').value = det.ratio; parts.push(det.ratio); }
+    hint.textContent = parts.length ? 'Detected: ' + parts.join(' · ') : 'Nothing detected — using the settings below.';
+    hint.hidden = false;
+    updateCost();
+  }
+
+  // ---------- current setup summary ----------
+  function mediaFields() {
+    return {
+      first_frame: $('gen-ff-url').value.trim() || (($('gen-ff-file').files || [])[0] ? 'local image' : ''),
+      last_frame: $('gen-lf-url').value.trim(),
+      reference_image: $('gen-ref-image').value.trim(),
+      reference_video: $('gen-ref-video').value.trim(),
+      reference_audio: $('gen-ref-audio').value.trim(),
+      seed: $('gen-seed').value.trim()
+    };
+  }
+  function renderSetup() {
+    var box = $('gen-setup'); if (!box) return;
+    var m = model(), md = mediaFields(), refs = [];
+    if (md.first_frame) refs.push('first frame');
+    if (md.last_frame) refs.push('last frame');
+    if (md.reference_image) refs.push('image');
+    if (md.reference_video) refs.push('video');
+    if (md.reference_audio) refs.push('audio');
+    var rows = [
+      ['Model', m ? m.name : '—'],
+      ['Duration', ($('gen-duration').value || '—') + ' s'],
+      ['Resolution', $('gen-res').value || '—'],
+      ['Aspect ratio', $('gen-ratio').value || '—'],
+      ['References', refs.length ? refs.join(', ') : 'None'],
+      ['Seed', md.seed || 'Random'],
+      ['Audio', 'Native audio on']
+    ];
+    box.innerHTML = '';
+    rows.forEach(function (r) { box.appendChild(el('dt', '', r[0])); box.appendChild(el('dd', '', r[1])); });
+  }
+  function validateMedia() {
+    var md = mediaFields(), bad = '';
+    ['gen-ff-url', 'gen-lf-url', 'gen-ref-image', 'gen-ref-video', 'gen-ref-audio'].forEach(function (id) {
+      var v = $(id).value.trim();
+      if (v && !/^https?:\/\/\S+$/i.test(v)) bad = 'Media must be a public HTTP/HTTPS URL.';
+    });
+    if (!bad && md.seed && !/^\d+$/.test(md.seed)) bad = 'Seed must be a whole number or blank.';
+    var e = $('gen-media-error'); e.textContent = bad; e.hidden = !bad;
+    return !bad;
+  }
+  function initMedia() {
+    ['gen-ff-url', 'gen-lf-url', 'gen-ref-image', 'gen-ref-video', 'gen-ref-audio', 'gen-seed'].forEach(function (id) {
+      $(id).addEventListener('input', function () { renderSetup(); validateMedia(); });
+    });
+    $('gen-detect').addEventListener('change', applyDetect);
+    $('gen-prompt').addEventListener('input', function () { clearTimeout(applyDetect._t); applyDetect._t = setTimeout(applyDetect, 250); });
   }
 
   // ---------- presets ----------
@@ -124,6 +198,7 @@
       $('gen-duration').value = p.duration; clampDuration();
     }
     updateCost();
+    if ($('gen-detected')) $('gen-detected').hidden = true;
     showPreview(p);
     status('Preset loaded — edit it or generate as-is.');
   }
@@ -164,9 +239,10 @@
       $('gen-ff-img').src = URL.createObjectURL(f);
       $('gen-ff-info').textContent = f.name + ' · ' + Math.round(f.size / 1024) + ' KB';
       $('gen-ff-preview').hidden = false;
+      renderSetup();
     });
     $('gen-ff-remove').addEventListener('click', function () {
-      file.value = ''; $('gen-ff-preview').hidden = true; $('gen-ff-img').removeAttribute('src');
+      file.value = ''; $('gen-ff-preview').hidden = true; $('gen-ff-img').removeAttribute('src'); renderSetup();
     });
   }
 
@@ -177,7 +253,8 @@
       var err = $('gen-error');
       err.hidden = true;
       var prompt = $('gen-prompt').value.trim();
-      if (!prompt) { err.textContent = 'Write a prompt or pick a preset first.'; err.hidden = false; return; }
+      if (!prompt && !mediaFields().first_frame) { err.textContent = 'Enter a prompt or a media URL.'; err.hidden = false; return; }
+      if (!validateMedia()) { $('gen-media-card').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       // Only wallets holding $NEXT can generate.
       if (!API || g.NVWallet.holderStatus() !== 'holder') {
         showResult(g.NVWalletUI.gate());
@@ -270,11 +347,19 @@
   }
 
   // ---------- boot ----------
-  g.NVApp = { showTab: showTab };
+  g.NVApp = { showTab: showTab, detect: detect, models: MODELS, status: status,
+    findModel: function (q) {
+      q = String(q || '').trim().toLowerCase();
+      if (!q) return null;
+      return MODELS.filter(function (m) { return m.id.toLowerCase() === q || m.name.toLowerCase() === q; })[0] || null;
+    },
+    prompt: function () { return $('gen-prompt').value; } };
   document.addEventListener('DOMContentLoaded', function () {
     initModels();
     initPresets();
     initFirstFrame();
+    initMedia();
+    renderSetup();
     initGenerate();
     initTasks();
     initChat();
